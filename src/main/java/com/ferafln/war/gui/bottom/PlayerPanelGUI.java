@@ -13,8 +13,10 @@ package com.ferafln.war.gui.bottom;
 import com.ferafln.war.Player;
 import com.ferafln.war.exception.WarException;
 import com.ferafln.war.gui.FontDefaultGame;
-import com.ferafln.war.gui.bottom.panel.InfoPlayerAbstract;
-import com.ferafln.war.gui.bottom.panel.InfoPlayerFactory;
+import com.ferafln.war.gui.bottom.leftpanel.LeftPlayerPanelAbstract;
+import com.ferafln.war.gui.bottom.leftpanel.LeftPlayerPanelFactory;
+import com.ferafln.war.gui.bottom.rightpanel.RightPlayerPanelAbstract;
+import com.ferafln.war.gui.bottom.rightpanel.RightPlayerPanelFactory;
 import com.ferafln.war.gui.util.PathImagesGUIEnum;
 import com.ferafln.war.territorio.util.Observer;
 import com.ferafln.war.territorio.util.StepRoundEnum;
@@ -30,8 +32,10 @@ public class PlayerPanelGUI extends javax.swing.JPanel implements Observer{
     private final ImageIcon bottom;
     private Player playerRound;
     private PlayerPanel playerPanel;
-    private InfoPlayerAbstract leftPanel;
-    private InfoPlayerFactory panelFactory;
+    private LeftPlayerPanelAbstract leftPanel;
+    private LeftPlayerPanelFactory leftFactory;
+    private RightPlayerPanelAbstract rightPanel;
+    private RightPlayerPanelFactory rightFactory;
 
     /** Creates new form PlayerPanelGUI */
     public PlayerPanelGUI(PlayerPanel playerPanel) {
@@ -40,20 +44,32 @@ public class PlayerPanelGUI extends javax.swing.JPanel implements Observer{
         btnObjectiveCard.setIcon(new ImageIcon(PathImagesGUIEnum.OBJECTIVE_CARD.getPath()));
         //jButton1 = tb;
         this.playerPanel = playerPanel;
-        this.getLeftInfoPanel();
+//        this.getLeftInfoPanel();
+//        this.getRightInfoPanel();
         this.setPlayerRound();
         jLabel1.setVisible(false);
         setBounds(0, 478, 1024, 300);
         this.add(leftPanel);
     }
 
+    private void getRightInfoPanel() {
+        if (this.rightFactory == null) {
+            this.rightFactory = new RightPlayerPanelFactory();
+        } else {
+            this.remove(rightPanel);
+        }
+        rightPanel = rightFactory.getInfoPanel(playerPanel);
+        this.add(rightPanel);
+        repaint();
+    }
+    
     private void getLeftInfoPanel() {
-        if (this.panelFactory == null) {
-            this.panelFactory = new InfoPlayerFactory();
+        if (this.leftFactory == null) {
+            this.leftFactory = new LeftPlayerPanelFactory();
         } else {
             this.remove(leftPanel);
         }
-        leftPanel = panelFactory.getInfoPanel(playerPanel);
+        leftPanel = leftFactory.getInfoPanel(playerPanel);
         this.add(leftPanel);
         repaint();
     }
@@ -66,9 +82,11 @@ public class PlayerPanelGUI extends javax.swing.JPanel implements Observer{
     private void setPlayerRound() {
         this.playerRound = this.playerPanel.getRoundPlayer();
         getLeftInfoPanel();
+        getRightInfoPanel();
+        rightPanel.update();
         leftPanel.update();
         lblNamePlayer.setText(playerRound.getName());
-        lblStatus.setText(playerRound.getStepRoundEnum().toString());
+//        lblStatus.setText(playerRound.getStepRoundEnum().toString());
         lblRound.setText("" + playerPanel.getRound());
         btnAttack.setEnabled(StepRoundEnum.ATTACK.equals(playerRound.getStepRoundEnum()));
         btnDefend.setEnabled(StepRoundEnum.ATTACK.equals(playerRound.getStepRoundEnum()));
@@ -93,8 +111,6 @@ public class PlayerPanelGUI extends javax.swing.JPanel implements Observer{
         jButton1 = new javax.swing.JButton();
         btnObjectiveCard = new javax.swing.JButton();
         lblRound = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        lblStatus = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setOpaque(false);
@@ -126,7 +142,11 @@ public class PlayerPanelGUI extends javax.swing.JPanel implements Observer{
 
         btnObjectiveCard.setBorderPainted(false);
         btnObjectiveCard.setContentAreaFilled(false);
-        btnObjectiveCard.setOpaque(false);
+        btnObjectiveCard.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnObjectiveCardActionPerformed(evt);
+            }
+        });
         add(btnObjectiveCard);
         btnObjectiveCard.setBounds(10, 95, 210, 185);
 
@@ -135,17 +155,6 @@ public class PlayerPanelGUI extends javax.swing.JPanel implements Observer{
         lblRound.setText("1");
         add(lblRound);
         lblRound.setBounds(480, 100, 65, 65);
-
-        jPanel2.setOpaque(false);
-        jPanel2.setLayout(null);
-
-        lblStatus.setFont(new FontDefaultGame());
-        lblStatus.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel2.add(lblStatus);
-        lblStatus.setBounds(10, 10, 200, 17);
-
-        add(jPanel2);
-        jPanel2.setBounds(560, 150, 220, 90);
 
         jLabel1.setIcon(new javax.swing.ImageIcon("C:\\Users\\feraf\\OneDrive\\Documentos\\NetBeansProjects\\War\\Images\\bottom.png")); // NOI18N
         add(jLabel1);
@@ -156,25 +165,31 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRS
     try {
         this.playerPanel.nextStep();
         setPlayerRound();
-        
+        if(this.playerPanel.getRound()==0){
+            playerPanel.setVisibleObjective(true);
+        }
     } catch (WarException ex) {
         //TODO: Implements this
     }
 }//GEN-LAST:event_jButton1ActionPerformed
+
+private void btnObjectiveCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnObjectiveCardActionPerformed
+    playerPanel.setVisibleObjective(true);
+}//GEN-LAST:event_btnObjectiveCardActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAttack;
     private javax.swing.JButton btnDefend;
     private javax.swing.JButton btnObjectiveCard;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JLabel lblNamePlayer;
     private javax.swing.JLabel lblRound;
-    private javax.swing.JLabel lblStatus;
     // End of variables declaration//GEN-END:variables
 
     @Override
     public void update() {
         leftPanel.update();
+        rightPanel.update();
     }
 }

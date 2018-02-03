@@ -6,6 +6,7 @@
 package com.ferafln.war.territorio;
 
 import com.ferafln.war.Player;
+import com.ferafln.war.territorio.util.StepRoundEnum;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class Territory{
     private Player player;
     private int amountTroops=0;
     private int initTroops = 0;
+    private boolean attacker = false;
     //private Dados dados;
 
     public Territory() {
@@ -113,7 +115,26 @@ public class Territory{
     public void commitTroops(){
         this.initTroops = this.amountTroops ;
     }
+    public boolean isAttacker(){
+        return (StepRoundEnum.ATTACK.equals(getPlayer().getStepRoundEnum())&& 
+                (getPlayer().getAttackTerritory()==null||getPlayer().getAttackTerritory().equals(this)));
+//        return attacker;
+    }
 
+//    public void setAttacker(boolean attacker) {
+//        this.attacker = attacker;
+//    }
+    
+    public boolean isDefender(){
+        for (Territory t : vizinhos) {
+            if(StepRoundEnum.ATTACK.equals(t.getPlayer().getStepRoundEnum())&& 
+                (t.getPlayer().getAttackTerritory()==null||t.getPlayer().getAttackTerritory().equals(t))){
+//            if(t.isAttacker()){
+                return true;
+            }
+        }
+        return false;
+    }
     public boolean equals(Object obj) {
         if (obj == null) {
             return false;

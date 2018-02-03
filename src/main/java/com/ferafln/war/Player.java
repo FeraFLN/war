@@ -97,8 +97,12 @@ public class Player{
         }
         this.attackTerritory=territory;
     }
+    public void cleanAttack(){
+        attackTerritory=null;
+        defendTerritorio=null;
+    }
     public void setDefendTerritory(Territory territory) throws WarException{
-        if (StepRoundEnum.ATTACK.equals(this.getStepRoundEnum())) {
+        if (!StepRoundEnum.ATTACK.equals(this.getStepRoundEnum())) {
             throw new WarException(MessageExceptionEnum.NOT_ATTACK_TURN);
         }
         if (territory == null) {

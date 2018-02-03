@@ -19,57 +19,86 @@ import com.ferafln.war.exception.WarException;
 import com.ferafln.war.exercito.Exercito;
 import com.ferafln.war.gui.util.PathImagesGUIEnum;
 import com.ferafln.war.territorio.Territory;
+import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
+
 /**
  *
  * @author feraf
  */
-public class TabuleiroGUI extends javax.swing.JFrame {
-    
+public class TabuleiroGUI extends javax.swing.JFrame implements PlayerPanel {
+
     private Tabuleiro tabuleiro;
 //    private List<PlayerGUI> playerGUIs;
     private List<TerritoryGUI> territoryGUIs;
-    private ObjectivePanel objectivePanel;
-    private PlayerPanel playerPanel;
-    private MapPanelGUI pnlPrincipal;
+    private ObjectiveDialog objectivePanel;
+//    private PlayerPanel playerPanel;
+    private MapPanelGUI pnlMap;
     private PlayerPanelGUI playerPanelGUI;
 //    private static String fileTroops = System.getProperty("user.dir")+File.separator + "Images" + File.separator+"Exercitos"+ File.separator ;//TODO remove this after;;
-    
+
     /** Creates new form Tabuleiro */
-    public TabuleiroGUI(List<Player> players) throws WarException {
+    public TabuleiroGUI() throws WarException {
+//        playerPanel = new PlayerDisplay(this);
         initComponents();
-        this.objectivePanel = new ObjectivePanel();
+
+    }
+
+    public void start(List<Player> players) throws WarException {
         tabuleiro = new Tabuleiro(players);
         tabuleiro.iniciarPartida();
-        playerPanel = new PlayerDisplay(tabuleiro);
-        pnlPrincipal = new MapPanelGUI();
-        playerPanelGUI = new PlayerPanelGUI(playerPanel);
-        this.add(pnlPrincipal);
-        pnlPrincipal.add(objectivePanel);
-        pnlPrincipal.add(playerPanelGUI);
+        pnlMap = new MapPanelGUI();
+        this.objectivePanel = new ObjectiveDialog(this, true);
+        playerPanelGUI = new PlayerPanelGUI(this);
+        this.add(pnlMap);
+        pnlMap.add(playerPanelGUI);
         setTerritorys();
-        
+        setVisible(true);
+        setVisibleObjective(true);
     }
-   
-   
-    
-    private void setTerritorys(){
+
+    public Tabuleiro getTabuleiro() {
+        return tabuleiro;
+    }
+
+    private void setTerritorys() {
         this.territoryGUIs = new ArrayList<>();
         List<Territory> l = tabuleiro.getTerritorys();
         for (Territory territory : l) {
             TerritoryGUI territoryGUI = new TerritoryGUI(territory);
             territoryGUI.setObserver(playerPanelGUI);
             territoryGUIs.add(territoryGUI);
-            pnlPrincipal.add(territoryGUI);
+            pnlMap.add(territoryGUI);
         }
     }
-    
+
+    public void setVisibleObjective(boolean b) {
+        if (true) {
+            objectivePanel.show(tabuleiro.getRoundPlayer().getObjetive().getId());
+        } else {
+            objectivePanel.setVisible(b);
+        }
+    }
+
+    @Override
+    public Player getRoundPlayer() {
+        return getTabuleiro().getRoundPlayer();
+    }
+
+    @Override
+    public int getRound() {
+        return getTabuleiro().getRound();
+    }
+
+    @Override
+    public void nextStep() throws WarException {
+        getTabuleiro().nextStep();
+        
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -126,29 +155,29 @@ public class TabuleiroGUI extends javax.swing.JFrame {
 //5=red
                     Player p = new Player();
                     p.setName("Fernando");
-                    Exercito e = new Exercito(5,"red");
+                    Exercito e = new Exercito(5, "red");
                     e.setIamgem(new ImageIcon(PathImagesGUIEnum.RED_TROOP.getPath()));
                     p.setTroop(e);
 
                     Player p1 = new Player();
                     p1.setName("Lina");
-                    e = new Exercito(4,"blue");
+                    e = new Exercito(4, "blue");
                     e.setIamgem(new ImageIcon(PathImagesGUIEnum.BLUE_TROOP.getPath()));
                     p1.setTroop(e);
 
                     Player p2 = new Player();
                     p2.setName("Gisele");
-                    e = new Exercito(0,"white");
+                    e = new Exercito(0, "white");
                     e.setIamgem(new ImageIcon(PathImagesGUIEnum.WHITE_TROOP.getPath()));
                     p2.setTroop(e);
-        
+
                     Player p3 = new Player();
                     p3.setName("Lucas");
-                    e = new Exercito(3,"green");
+                    e = new Exercito(3, "green");
                     e.setIamgem(new ImageIcon(PathImagesGUIEnum.GREEN_TROOP.getPath()));
                     p3.setTroop(e);
-        
-                    new TabuleiroGUI(Arrays.asList(p1,p2,p,p3)).setVisible(true);
+
+                    new TabuleiroGUI().start(Arrays.asList(p1, p2, p, p3));
                 } catch (WarException ex) {
                     ex.printStackTrace();
                 }
@@ -157,6 +186,4 @@ public class TabuleiroGUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
-   
 }

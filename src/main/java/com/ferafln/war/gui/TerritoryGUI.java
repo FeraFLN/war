@@ -18,7 +18,7 @@ import com.ferafln.war.territorio.util.Observer;
 import com.ferafln.war.territorio.util.Props;
 import com.ferafln.war.territorio.util.StepRoundEnum;
 import java.awt.event.MouseEvent;
-import java.io.File;
+import java.util.List;
 import java.util.Properties;
 import javax.swing.SwingUtilities;
 
@@ -83,10 +83,13 @@ public class TerritoryGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
 private void lblImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblImageMouseClicked
+//    Territory result = teste();
     if (isDistExtraTroops()) {
         actionDistTroops(evt);
-    } else if (StepRoundEnum.ATTACK.equals(this.territory.getPlayer().getStepRoundEnum())) {
+    } else if (this.territory.isAttacker()) {
         actionAttack(evt);
+    } else if (this.territory.isDefender()) {
+        actionDefence(evt);
     }
 }//GEN-LAST:event_lblImageMouseClicked
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -96,14 +99,40 @@ private void lblImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:ev
 
     private void actionAttack(MouseEvent evt) {
         Player p = this.territory.getPlayer();
-        if (SwingUtilities.isLeftMouseButton(evt)) {
-            try {
+        try {
+            if (SwingUtilities.isLeftMouseButton(evt)) {
                 p.setAttackTerritory(territory);
-                this.observer.update();
-            } catch (WarException ex) {
-                //TODO: TREAT THIS EXCEPTION
+            } else if (SwingUtilities.isRightMouseButton(evt)) {
+                p.cleanAttack();
+            }
+            this.observer.update();
+        } catch (WarException ex) {
+            //TODO: TREAT THIS EXCEPTION
+        }
+    }
+
+    private void actionDefence(MouseEvent evt) {
+        Player p = findAttacker();
+        try {
+            if (SwingUtilities.isLeftMouseButton(evt)) {
+                p.setDefendTerritory(territory);
+            } else if (SwingUtilities.isRightMouseButton(evt)) {
+                p.cleanAttack();
+            }
+            this.observer.update();
+        } catch (WarException ex) {
+            //TODO: TREAT THIS EXCEPTION
+        }
+    }
+
+    private Player findAttacker() {
+        for (Territory t : territory.getVizinhos()) {
+            if (StepRoundEnum.ATTACK.equals(t.getPlayer().getStepRoundEnum())
+                    && (t.getPlayer().getAttackTerritory() == null || t.getPlayer().getAttackTerritory().equals(t))) {
+                return t.getPlayer();//.setDefendTerritory(territory);
             }
         }
+        return null;
     }
 
     private void actionDistTroops(MouseEvent evt) {

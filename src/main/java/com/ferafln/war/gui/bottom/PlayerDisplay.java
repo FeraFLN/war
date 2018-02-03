@@ -5,8 +5,8 @@
 package com.ferafln.war.gui.bottom;
 
 import com.ferafln.war.Player;
-import com.ferafln.war.Tabuleiro;
 import com.ferafln.war.exception.WarException;
+import com.ferafln.war.gui.TabuleiroGUI;
 
 /**
  *
@@ -14,26 +14,30 @@ import com.ferafln.war.exception.WarException;
  */
 public class PlayerDisplay implements PlayerPanel{
 
-    private Tabuleiro tabuleiro;
+    private TabuleiroGUI tabuleiroGUI;
 
-    public PlayerDisplay(Tabuleiro tabuleiro) {
-        this.tabuleiro = tabuleiro;
+    public PlayerDisplay(TabuleiroGUI tabuleiroGUI) {
+        this.tabuleiroGUI = tabuleiroGUI;
     }
     
     
      @Override
     public Player getRoundPlayer() {
-        return tabuleiro.getRoundPlayer();
+        return tabuleiroGUI.getTabuleiro().getRoundPlayer();
     }
 
     @Override
     public int getRound() {
-        return tabuleiro.getRound();
+        return tabuleiroGUI.getTabuleiro().getRound();
     }
 
     @Override
     public void nextStep() throws WarException {
-        tabuleiro.nextStep();
+        tabuleiroGUI.getTabuleiro().nextStep();
+    }
+    
+    public void setVisibleObjective(boolean b){
+        tabuleiroGUI.setVisibleObjective(b);
     }
     
 }

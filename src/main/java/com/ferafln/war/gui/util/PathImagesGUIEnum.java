@@ -23,13 +23,16 @@ public enum PathImagesGUIEnum {
     GREEN_TROOP("troops" + File.separator+"verde.png"),
     YELLOW_TROOP("troops" + File.separator+"amarelo.png");
     
-    private final String root = System.getProperty("user.dir")+File.separator + "Images" + File.separator ;
+    private static final String root = System.getProperty("user.dir")+File.separator + "Images" + File.separator ;
     private String path;
 
     private PathImagesGUIEnum(String path) {
         this.path = path;
     }
 
+    public static String getRoot() {
+        return root;
+    }
     public String getPath() {
         return root + path;
     }

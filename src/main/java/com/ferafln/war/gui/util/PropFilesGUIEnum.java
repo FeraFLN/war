@@ -11,7 +11,8 @@ import java.io.File;
  * @author feraf
  */
 public enum PropFilesGUIEnum {
-    TERRITORYS_POSITION("territorysPosition.properties");
+    TERRITORYS_POSITION("territorysPosition.properties"),
+    OBJECTIVE_IMAGE("objectivesNameImage.properties");
     
     private final String root =System.getProperty("user.dir") + File.separator + "properties" + File.separator+"gui"+ File.separator;
     private String path;

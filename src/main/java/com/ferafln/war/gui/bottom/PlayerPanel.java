@@ -16,6 +16,8 @@ public interface PlayerPanel {
     public Player getRoundPlayer();
 
     public int getRound();
-
+    
+    public void setVisibleObjective(boolean b);
+    
     public void nextStep() throws WarException;
 }
