@@ -1,4 +1,6 @@
-Hey guys!!!
+![alt text](./Images/image_war.png "results")
+
+Hey guys!!!<br/>
 Well, I would like to share some of my projects with you. I call this project "Guerra". 
 It's a game that I'm developing in Java Swing and there you can learn a little bit more about me 
 and how deep is my knowledge in P.O.O. and a little about project patterns as well.
