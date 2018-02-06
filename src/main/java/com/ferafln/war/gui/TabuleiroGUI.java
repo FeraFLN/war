@@ -12,14 +12,12 @@ package com.ferafln.war.gui;
 
 import com.ferafln.war.gui.bottom.PlayerPanel;
 import com.ferafln.war.gui.bottom.PlayerPanelGUI;
-import com.ferafln.war.gui.bottom.PlayerDisplay;
 import com.ferafln.war.Player;
 import com.ferafln.war.Tabuleiro;
 import com.ferafln.war.exception.WarException;
 import com.ferafln.war.exercito.Exercito;
 import com.ferafln.war.gui.util.PathImagesGUIEnum;
 import com.ferafln.war.territorio.Territory;
-import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import java.util.Arrays;

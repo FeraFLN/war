@@ -1,0 +1,7 @@
+
+*.class
+target/surefire-reports/com.ferafln.war.territorio.TerritorioTest.txt
+target/surefire-reports/TEST-com.ferafln.war.territorio.TerritorioTest.xml
+target/test-classes/.netbeans_automatic_build
+target/maven-archiver/pom.properties
+nb-configuration.xml

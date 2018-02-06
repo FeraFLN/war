@@ -17,7 +17,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.RoundRectangle2D;
-import java.util.Optional;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultButtonModel;
